@@ -1,5 +1,3 @@
-from time import strftime
-import speech_recognition as sr
 import os
 import glob
 import pyttsx3
@@ -9,13 +7,12 @@ import subprocess
 import random
 import google.generativeai as genai
 from dotenv import load_dotenv
-import os
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Configure Gemini API
-GEMINI_API_KEY = os.getenv("AIzaSyAcrB**************M1EtsV_9Vdz-Pdic")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")  # Use correct key name here!
 if not GEMINI_API_KEY:
     print("Warning: GEMINI_API_KEY not found in environment variables.")
 
@@ -43,35 +40,13 @@ def say(text):
     engine.runAndWait()
 
 
-def take_command():
-    """Capture voice input and convert to text"""
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening...")
-        r.pause_threshold = 1
-        r.adjust_for_ambient_noise(source, duration=1)
-        try:
-            audio = r.listen(source, timeout=5)
-            print("Recognizing...")
-            query = r.recognize_google(audio, language="en-in")
-            print(f"User said: {query}")
-            return query.lower()
-        except sr.WaitTimeoutError:
-            return ""
-        except sr.UnknownValueError:
-            return "Sorry, I did not catch that."
-        except Exception as e:
-            print(f"Error: {e}")
-            return "Sorry, an error occurred."
-
-
 def get_current_time():
     """Return current time in a readable format"""
     return datetime.datetime.now().strftime("%I:%M %p")
 
 
 def open_application(app_name):
-    """Open applications based on voice command"""
+    """Open applications based on command"""
     app_paths = {
         "facetime": "/System/Applications/FaceTime.app",
         "music": "/System/Applications/Music.app",
@@ -119,7 +94,6 @@ def ask_gemini(query):
         return "I'm sorry, the AI service is currently unavailable."
 
     try:
-        # Customize the prompt to make responses more conversational
         prompt = f"""You are Mego, a friendly AI assistant. Respond to the following query in a helpful, conversational manner. 
         Keep your response concise and natural for voice output (under 100 words).
 
@@ -198,7 +172,8 @@ if __name__ == '__main__':
     say("Hello! I am Mego A.I. How can I help you today?")
 
     while True:
-        query = take_command()
+        # ⌨️ User types command instead of speaking
+        query = input("You: ").lower()
 
         if query:
             response = handle_query(query)
@@ -208,3 +183,5 @@ if __name__ == '__main__':
                 # Check if it's an exit command
                 if any(word in response for word in ["Goodbye", "exit", "quit"]):
                     break
+
+           
