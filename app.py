@@ -1,15 +1,13 @@
-import jarvis_logic
+from jarvis_logic import say, take_command, handle_query
 
-if __name__ == '__main__':
-    jarvis_logic.say("Hello! I am Mego A.I. How can I help you today?")
+say("Hello! I am Mego A.I. How can I help you today?")
 
-    while True:
-        query = jarvis_logic.take_command()
+while True:
+    query = take_command()
 
-        if query:
-            response = jarvis_logic.handle_query(query)
-            if response:
-                jarvis_logic.say(response)
-
-                if any(word in response.lower() for word in ["goodbye", "exit", "quit"]):
-                    break
+    if query:
+        response = handle_query(query)
+        if response:
+            say(response)
+            if any(word in response for word in ["Goodbye", "exit", "quit"]):
+                break
