@@ -1,18 +1,15 @@
-import os
-from flask import Flask, request, jsonify
-from flask_cors import CORS
 import jarvis_logic
 
-app = Flask(__name__)
-CORS(app)
-
-@app.route('/chat', methods=['POST'])
-def chat():
-    data = request.get_json()
-    user_message = data.get("message")
-    assistant_reply = jarvis_logic.get_response(user_message)
-    return jsonify({'response': assistant_reply})
-
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    jarvis_logic.say("Hello! I am Mego A.I. How can I help you today?")
+
+    while True:
+        query = jarvis_logic.take_command()
+
+        if query:
+            response = jarvis_logic.handle_query(query)
+            if response:
+                jarvis_logic.say(response)
+
+                if any(word in response.lower() for word in ["goodbye", "exit", "quit"]):
+                    break
