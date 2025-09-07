@@ -9,5 +9,9 @@ while True:
         response = handle_query(query)
         if response:
             say(response)
-            if any(word in response for word in ["Goodbye", "exit", "quit"]):
+
+            # exit conditions
+            if any(word in response.lower() for word in ["goodbye", "exit", "quit", "stop"]):
                 break
+
+
