@@ -1,8 +1,6 @@
-flask
-flask-cors
-openai
-requests
+Flask
 python-dotenv
+google-generativeai
 
 
 
