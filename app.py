@@ -1,17 +1,18 @@
-from jarvis_logic import say, take_command, handle_query
+from flask import Flask, render_template, request, jsonify
+from jarvis_logic import handle_query
 
-say("Hello! I am Mego A.I. How can I help you today?")
+app = Flask(__name__)
 
-while True:
-    query = take_command()
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-    if query:
-        response = handle_query(query)
-        if response:
-            say(response)
+@app.route("/ask", methods=["POST"])
+def ask():
+    data = request.get_json()
+    query = data.get("message", "")
+    response = handle_query(query)
+    return jsonify({"response": response})
 
-            # exit conditions
-            if any(word in response.lower() for word in ["goodbye", "exit", "quit", "stop"]):
-                break
-
-
+if __name__ == "__main__":
+    app.run(debug=True)
